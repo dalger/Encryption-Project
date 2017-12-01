@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>CS 463 Final Project</title>
+        <!--Author: David Alger II-->
+
+        <script src="https://code.jquery.com/jquery-3.2.1.js"
+            integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+            crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" 
+            integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" 
+            integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" 
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+        <script src="CryptoJSv3.1.2/rollups/aes.js"></script>
+        <script src="CryptoJSv3.1.2/rollups/pbkdf2.js"></script>
+        <script src="CryptoJSv3.1.2/rollups/sha256.js"></script>
+        <!--https://github.com/travist/jsencrypt-->
+        <script src="jsencrypt.js"></script>
+        <script src="main.js"></script>
+    </head>
+    <body>
+        <div class="page-header" style="text-align: center;">
+            <h1>ODU Fall 2017 CS 463 Course Project <small>By David Alger II</small></h1>
+        </div>
+
+        <div class="well" style="padding-left: 3%;">
+            <label>Type of Cryptography</label>
+            <div class="input-group" style="width: 26%;">                
+                <select class="form-control" id="type">
+                    <option value="Symmetric" selected>Symmetric</option>
+                    <option value="Asymmetric">Asymmetric</option>
+                    <option value="digSig">Digital Signature</option>
+                </select>
+                <span class="input-group-addon" id="requirements"></span>
+            </div>
+
+            <div class="form-group" style="width: 15%;">
+                <label>Password:</label>
+                <input class="form-control" id="password" />
+            </div>
+            
+            <div class="form-group" style="width: 80%;">
+                <div class="row">
+                        <div class="col-xs-4">
+                            <label>Public Key:</label>
+                        </div>
+                        <div class="col-xs-6">
+                            <textarea class="form-control" id="pubKey" placeholder="Not Available" rows="7"></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <label>Private Key:</label>
+                        </div>
+                        <div class="col-xs-6">
+                            <textarea class="form-control" id="privKey" placeholder="Not Available" rows="10"></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <label>Shared Key:</label>
+                        </div>
+                        <div class="col-xs-6">
+                            <textarea class="form-control" id="sharedKey" placeholder="Not Available"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="row">
+                    <div class="col-xs-4">
+                        <label class="label label-warning" id="pubKey">Not Available</label>
+                    </div>
+                    <div class="col-xs-4">
+                        <label class="label label-danger" id="privKey">Not Available</label>
+                    </div>
+                    <div class="col-xs-4">
+                        <label class="label label-info" id="sharedKey">Not Available</label>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+        <div class="well">
+            <div class="col-xs-5" style="text-align: right;">
+                <button type="button" class="btn btn-primary" id="encrypt">Encrypt</button>
+            </div>
+            <div class="col-xs-2" style="text-align: center;">
+                <button type="button" class="btn btn-success" id="decrypt">Decrypt</button>
+            </div>
+            <div class="col-xs-2">
+                <button type="button" class="btn btn-danger" id="clear">Clear</button>
+            </div>
+            
+            <div style="margin-left: 25%; margin-top: 40px; margin-bottom: 40px;">
+                <textarea id="message" class="form-control" style="width: 70%; height: 150px;" placeholder="Enter text..."></textarea>
+
+                <div id="swapEncypted" title="Copy to Decrypt" class="glyphicon glyphicon-arrow-up" style=" text-align: center; width: 70%;
+                font-size: large; margin-top: 8px; margin-bottom: 8px; cursor: pointer;"></div>
+
+                <textarea id="result" disabled class="form-control" style="width: 70%; height: 150px;" placeholder="Results show here"></textarea>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-xs-4" style="margin-left: 15%;">
+                        <label>Digital Signature:</label>
+                        <input class="form-control" id="digSig" disabled/>
+                    </div>
+                    <div class="col-xs-4">
+                        <label>Digital Signature Verification:</label>
+                        <input class="form-control" id="verifySig" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
