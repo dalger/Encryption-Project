@@ -17,21 +17,12 @@ $(function(){//On document ready
             
             $("#sharedKey").text(pass);
         }
-        else if(type === 2){
-            auth(this.value);
-        }
     });
 
     $("#encrypt").click(function(){
         message = $("#message").val();
         key = $("#sharedKey").text();
 
-        // key = CryptoJS.lib.WordArray.random(16);
-        // pass = pass + key;
-
-        // $("#privKey").text(key);
-        // $("#sharedKey").text(pass);
-        
         if(type === 0){//symmetric 
             var encrypted = CryptoJS.AES.encrypt(message, key);
             $("#result").val(encrypted);
@@ -43,8 +34,6 @@ $(function(){//On document ready
     $("#decrypt").click(function(){
         message = $("#message").val();
         key = $("#sharedKey").text();
-
-        // key = CryptoJS.lib.WordArray.random(16);
         
         if(type === 0){//symmetric 
             var decrypted = CryptoJS.AES.decrypt(message, key);
@@ -67,6 +56,8 @@ $(function(){//On document ready
     $("#type").change(function(){
         type = this.selectedIndex;
         if(type === 0){ 
+            $("#password").attr("disabled", false);
+            $("#pubKey, #privKey, #sharedKey").empty();
             $("#requirements").text("Please A Enter Password"); 
 
             $("#pubKey").text("");
@@ -75,6 +66,9 @@ $(function(){//On document ready
             $("#message").val("");
         }
         else if(type === 1){
+            $("#password").attr("disabled", true);
+            $("#password")[0].value = "";
+            $("#pubKey, #privKey, #sharedKey").empty();
             $("#requirements").text("Generating Keys..."); 
 
             $("#pubKey").text("");
@@ -85,12 +79,13 @@ $(function(){//On document ready
             generateKeys();
         }
         else if(type === 2){
+            $("#password").attr("disabled", false);
             $("#requirements").text("Please A Enter Password"); 
-            
-            $("#pubKey").text("");
-            $("#privKey").text("");
+            $("#pubKey, #privKey, #sharedKey").empty();
             $("#result").val("");
             $("#message").val("");
+
+            generateKeys();
         }
     });
     $("#type").trigger("change");
@@ -98,9 +93,7 @@ $(function(){//On document ready
 
 
     //asymmetric
-  function asymmetricCrypto(fn){
-      // Execute when they click the button.
-    //   $('#encrypt').click(function () {
+function asymmetricCrypto(fn){
   if(fn === "encrypt"){
         // Create the encryption object.
         var crypt = new JSEncrypt();
@@ -117,19 +110,10 @@ $(function(){//On document ready
   
         // Get the input and crypted values.
         var input = $('#message').val();
-        // var crypted = $('#result').val();
 
         $('#result').val(crypt.encrypt(input));
     }
     else if(fn === "decrypt"){
-    // });
-    // $("decrypt").click(function(){
-        // Alternate the values.
-        // if (input) {
-        //   $('#result').val(crypt.encrypt(input));
-        // //   $('#input').val('');
-        // }
-        // else if (crypted) {
         var crypt = new JSEncrypt();
 
         crypt.setPrivateKey($('#privKey').text());
@@ -143,13 +127,8 @@ $(function(){//On document ready
         var crypted = $('#message').val();
         var decrypted = crypt.decrypt(crypted);
         $('#result').val(decrypted);
-        //   $('#crypted').val('');
-        // }
-    //   });
     }
-  
-      
-  
+
       // If they wish to generate new keys.
     //   $('#type').change(generateKeys);
     //   generateKeys();
@@ -170,8 +149,8 @@ var generateKeys = function () {
     // $('#time-report').text('Generated in ' + time + ' ms');
     var pubkey = crypt.getPublicKey();
     var privkey = crypt.getPrivateKey();
-    $('#privKey').text(privkey);//.split("-----")[2].replace(/\n/g, "")
-    $('#pubKey').text(pubkey);//.split("-----")[2].replace(/\n/g, "")
+    $('#privKey').text(privkey);
+    $('#pubKey').text(pubkey);
 };
 
 //https://gist.github.com/billyxs/c9a338b5443d346ff9eb
@@ -187,8 +166,14 @@ function auth(password) {
     var iterations = 1000;
 
     // make your own hash if you don't know this one
-    var matchHash = CryptoJS.SHA256($("#message").val());//'abc123def456zxy987';
+    var matchHash = $("#password").val();//'98a24959e05c77656f6308a541d2dd922c';//CryptoJS.SHA256();//$("#pubKey").text();//'abc123def456zxy987';
+
+    var crypt = new JSEncrypt();
+    // Set the private.
+    crypt.setPrivateKey($('#privKey').text());
+    var signature = crypt.encrypt(matchHash);
 
     var userHash = CryptoJS.PBKDF2(password, salt, { keySize: 512/32, iterations: iterations });
-    return userHash.toString() === matchHash;
+    // return userHash.toString() === matchHash;
+    console.log( userHash.toString() === signature)
 };
